@@ -1,0 +1,169 @@
+{
+"AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Creating VPC with two subnet for project work",
+    "Metadata": {
+
+    },
+    "Parameters": {
+
+       "VpcCIDR":{
+         "Description": "Please enter the IP range (CIDR notation) for this VPC",
+         "Type": "String",
+         "Default": "10.0.0.0/16"
+       },
+
+       "PublicSubnetCIDR":{
+         "Description": "Please enter the IP range (CIDR notation) for the public subnet",
+         "Type": "String",
+         "Default": "10.0.1.0/24"
+       },
+
+       "PrivateSubnetCIDR":{
+         "Description": "Please enter the IP range (CIDR notation) for the private subnet",
+         "Type": "String",
+         "Default": "10.0.2.0/24"
+       }
+    
+    },
+    "Mappings": {
+
+    },
+    "Conditions": {
+
+    },
+    "Resources": {
+        
+        "ProjectVPC": {
+          "Type": "AWS::EC2::VPC",
+          "Properties": {
+            "CidrBlock": { "Ref": "VpcCIDR" },
+            "EnableDnsSupport" : "true",
+            "EnableDnsHostnames" : "true",
+            "Tags": [
+                {
+                  "Key" : "Name",  
+                  "Value" : "ProjectVPC"
+                }
+            ]
+          }
+        },
+        
+        "ProjectIGW": {
+          "Type": "AWS::EC2::InternetGateway",
+          "Properties": {
+            "Tags": [
+                {"Key" : "Name",  "Value" : "ProjectIGW"}
+            ]
+          }
+        },
+        "AttachGateway": {
+          "Type": "AWS::EC2::VPCGatewayAttachment",
+          "Properties": {
+            "VpcId": { "Ref": "ProjectVPC" }, 
+            "InternetGatewayId": { "Ref": "ProjectIGW" }
+          }
+        },
+        
+        "Projectpublicsubnet": {
+          "Type": "AWS::EC2::Subnet",
+          "Properties": {
+            "AvailabilityZone": "ap-south-1a",
+            "VpcId": { "Ref": "ProjectVPC" },
+            "CidrBlock": { "Ref": "PublicSubnetCIDR" },
+            "MapPublicIpOnLaunch": "true",
+            "Tags": [
+                {"Key" : "Name",  "Value" : "Projectpublicsubnet"}
+            ]
+          }
+        },
+        
+        "Projectprivatesubnet": {
+          "Type": "AWS::EC2::Subnet",
+          "Properties": {
+            "AvailabilityZone": "ap-south-1a",
+            "VpcId": { "Ref": "ProjectVPC" },
+            "CidrBlock": { "Ref": "PrivateSubnetCIDR" },
+            "MapPublicIpOnLaunch": "false",
+            "Tags": [
+                {"Key" : "Name",  "Value" : "Projectprivatesubnet"}
+            ]
+          }
+        },
+        
+        "ProjectrouteTable1": {
+          "Type": "AWS::EC2::RouteTable",
+          "Properties": {
+            "VpcId": { "Ref": "ProjectVPC" },
+            "Tags": [
+                {"Key" : "Name",  "Value" : "ProjectrouteTable1"}
+            ]
+          }
+        },
+
+        "ProjectrouteTable2": {
+          "Type": "AWS::EC2::RouteTable",
+          "Properties": {
+            "VpcId": { "Ref": "ProjectVPC" },
+            "Tags": [
+                {"Key" : "Name",  "Value" : "ProjectrouteTable2"}
+            ]
+          }
+        },
+        
+        "Publicdefaultroute": {
+          "Type": "AWS::EC2::Route",
+          "Properties": {
+            "RouteTableId": { "Ref": "ProjectrouteTable1" },
+            "DestinationCidrBlock": "0.0.0.0/0",
+            "GatewayId": { "Ref": "ProjectIGW" }
+          }
+        },
+        
+        "PublicrouteTableAssoc": {
+          "Type": "AWS::EC2::SubnetRouteTableAssociation",
+          "Properties": {
+            "SubnetId": { "Ref": "Projectpublicsubnet" },
+            "RouteTableId": { "Ref": "ProjectrouteTable1" }
+          }
+        },
+        
+        "PrivaterouteTableAssoc": {
+          "Type": "AWS::EC2::SubnetRouteTableAssociation",
+          "Properties": {
+            "SubnetId": { "Ref": "Projectprivatesubnet" },
+            "RouteTableId": { "Ref": "ProjectrouteTable2" }
+          }
+        }
+        
+        
+        
+        
+        
+        
+        
+    
+        
+
+    },
+    "Outputs": {
+
+        "ProjectVPC": {
+            "Value": { "Ref": "ProjectVPC" }
+        },
+
+        "ProjectIGW": {
+            "Value": { "Ref": "ProjectIGW" }
+        },
+
+        "Projectpublicsubnet": {
+            "Value": { "Ref": "Projectpublicsubnet" }
+        },
+
+        "Projectprivatesubnet": {
+            "Value": { "Ref": "Projectprivatesubnet" }
+        }
+
+        
+
+    }
+}

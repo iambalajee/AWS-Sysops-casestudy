@@ -1,0 +1,23 @@
+---
+- hosts: tag_Name_Project_ASG
+  become: true
+  tasks:
+    - name: Installing Apache2
+      apt:
+        name: apache2
+        state: present
+
+    - name: Create the webpage index.html
+      copy:
+        src: /home/ubuntu/index.html
+        dest: /var/www/html/index.html
+
+    - name: restart-apache2
+      service:
+        name: apache2
+        state: restarted
+
+
+
+
+
