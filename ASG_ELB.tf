@@ -10,6 +10,8 @@ resource "aws_launch_configuration" "LC1" {
 # key name
   key_name = var.key_name
 
+  user_data = "${file("userdata.sh")}"
+
 }
 
 ## Creating AutoScaling Group

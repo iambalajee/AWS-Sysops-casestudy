@@ -11,6 +11,8 @@ resource "aws_instance" "MySQL" {
 # key name
   key_name = var.key_name
 
+  user_data = "${file("userdata.sh")}"
+  
   tags = {
     Name = "MySQL-linux-vm"
   }

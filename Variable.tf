@@ -24,7 +24,7 @@ variable "key_name" {
 
 variable "vpc_id" {
   description = "VPC ID for AWS resources."
-  default = "vpc-0235ce27d445a3c35"
+  default = "vpc-098ac393ac8ebb81e"
 }
 
 variable "availability_zone_id" {
@@ -36,12 +36,12 @@ variable "availability_zone_id" {
 
 variable "Publicsubnet" {
   description = "Subnet for webserver cluster EC2 instances."
-  default = "subnet-0d7adcb1921a3505e"
+  default = "subnet-0eca7e4c8e138bdc4"
 }
 
 variable "Privatesubnet" {
   description = "Subnet for MySQL EC2 instances."
-   default = "subnet-00ffa770923b063d4"
+   default = "subnet-0373d340248be550b"
 }
 
 
